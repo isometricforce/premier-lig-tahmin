@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Premier Lig Skor Tahminleri</title>
+<style>
+:root{
+  --bg:#f6f5f1;--kart:#ffffff;--yazi:#1d1d1b;--soluk:#6b6a65;--cizgi:#e4e2db;
+  --vurgu:#2f5d50;--vurgu-acik:#e3eeea;--isi:47,93,80;
+  --uyari:#a4511d;--uyari-acik:#f8e9df;--iyi:#2f6d3a;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141513;--kart:#1d1f1c;--yazi:#ecebe6;--soluk:#9c9b95;--cizgi:#30332f;
+  --vurgu:#8cc2b0;--vurgu-acik:#22322d;--isi:140,194,176;
+  --uyari:#e8a274;--uyari-acik:#3a2a20;--iyi:#8fcf98;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--yazi);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.sar{max-width:860px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:17px;margin:32px 0 12px}
+.alt-baslik{color:var(--soluk);font-size:13px}
+.kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;padding:16px;margin-bottom:12px}
+.mac-ust{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.takimlar{font-weight:600;font-size:16px}
+.saat{color:var(--soluk);font-size:13px}
+.uclu{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.uclu div{background:var(--vurgu-acik);border-radius:8px;padding:6px 8px;text-align:center}
+.uclu b{display:block;font-size:17px}
+.uclu span{font-size:12px;color:var(--soluk)}
+.izgara{display:grid;grid-template-columns:auto repeat(6,1fr);gap:2px;font-size:12px;margin-top:8px}
+.izgara div{text-align:center;padding:5px 0;border-radius:4px;font-variant-numeric:tabular-nums}
+.izgara .bas{color:var(--soluk);font-size:11px}
+.izgara .satir-bas{text-align:right;padding-right:6px;color:var(--soluk);font-size:11px;white-space:nowrap}
+.iki-kolon{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+@media (max-width:560px){.iki-kolon{grid-template-columns:1fr}}
+.cubuk{display:grid;grid-template-columns:28px 1fr 44px;align-items:center;gap:6px;font-size:12px;margin:3px 0}
+.cubuk i{display:block;height:10px;background:var(--vurgu);border-radius:3px}
+.cubuk span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.etiket{font-size:12px;color:var(--soluk);margin:0 0 4px}
+.cipler{display:flex;flex-wrap:wrap;gap:6px}
+.cip{border:1px solid var(--cizgi);border-radius:999px;padding:2px 10px;font-size:12px}
+.cip.uyari{background:var(--uyari-acik);border-color:transparent;color:var(--uyari);font-weight:600}
+.cip.iyi{color:var(--iyi);border-color:var(--iyi)}
+.ozet-satir{font-size:13px;color:var(--soluk);margin-top:10px}
+.bos{color:var(--soluk);font-style:italic}
+details{margin-top:10px}
+summary{cursor:pointer;color:var(--vurgu);font-size:13px}
+.sonuc{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+.skor{font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.not{font-size:13px;color:var(--soluk)}
+.not p{margin:6px 0}
+</style>
+</head>
+<body>
+<div class="sar">
+  <h1>Premier Lig Skor Tahminleri</h1>
+  <div class="alt-baslik" id="guncelleme"></div>
+
+  <h2>Sürpriz radarı</h2>
+  <div id="radar"></div>
+
+  <h2>Yaklaşan maçlar</h2>
+  <div id="maclar"></div>
+
+  <h2>Sonuçlar</h2>
+  <div id="ozet" class="kart" hidden></div>
+  <div id="sonuclar"></div>
+
+  <h2>Nasıl okunur</h2>
+  <div class="kart not">
+    <p>Her maç için model, olabilecek her skora bir ihtimal verir. Tablodaki sayılar o skorun yüzde ihtimalidir (satır: ev sahibinin golü, sütun: deplasmanın golü). Takım gol olasılıkları ve 1/X/2 aynı tablodan hesaplanır.</p>
+    <p><b>Sürpriz adayı:</b> Sadece sonuçlara bakan bir model (puan tablosu bakışı) bir takımı belirgin favori görüyor, ama oyunun kalitesine (xG) bakan model zayıf takıma en az 6 puan daha fazla şans veriyor. 2017'den bu yana test edilen 3.470 maçta bu durumda zayıf takım maçların %29.5'ini kazandı; sonuç bakışı %22.5 bekliyordu.</p>
+    <p><b>Bol gol riski:</b> 5+ gol ihtimalinin en yüksek olduğu %10'luk maçlar. Geçmişte bu gruptaki maçların %23'ünde 5+ gol oldu (genel ortalama %16).</p>
+    <p>Radar hangi maçın sürpriz biteceğini bilmez. %30 ihtimal, 10 maçın 7'sinde sürprizin olmayacağı demektir.</p>
+    <p><b>Sürpriz</b> (sonuçlarda): belirgin favori kaybettiyse, maçta 5+ gol olduysa veya gerçek skora model <span id="e-skor"></span>'ten az ihtimal verdiyse.</p>
+    <p>Model bahis oranı kullanmaz ve "şunu oyna" demez. Gösterilen her tahmin, maçtan önce değiştirilemez bir deftere yazılmıştır.</p>
+  </div>
+</div>
+
+<script id="veri" type="application/json">{"guncelleme": "2026-10-17T09:39:21.622027+00:00", "model": "K2 — takım gücü %25 gol + %75 xG'den", "esik": {"fav": 0.45, "fark": 0.06, "gol": 0.25, "gol_gercek": 0.228, "skor": 0.03}, "yaklasan": [{"baslama": "2026-10-17T11:30:00+00:00", "ev": "Everton", "dep": "Chelsea", "uretim": "2026-10-13T12:55:51.034028+00:00", "matris": [[0.0463, 0.0734, 0.0582, 0.0307, 0.0122, 0.0039], [0.0689, 0.1092, 0.0865, 0.0457, 0.0181, 0.0057], [0.0512, 0.0812, 0.0643, 0.034, 0.0135, 0.0043], [0.0254, 0.0403, 0.0319, 0.0169, 0.0067, 0.0021], [0.0095, 0.015, 0.0119, 0.0063, 0.0025, 0.0008], [0.0028, 0.0045, 0.0035, 0.0019, 0.0007, 0.0002]], "disarida": 0.01, "ev_gol": [0.2259, 0.3361, 0.25, 0.124, 0.0641], "dep_gol": [0.205, 0.3249, 0.2574, 0.136, 0.0767], "p1": 0.359166, "px": 0.239431, "p2": 0.401401, "kg": 0.6153890000000001, "ust15": 0.811393, "ust25": 0.5928110000000001, "ust35": 0.368961, "en_olasi": [[0.109182, "1-1"], [0.08651, "1-2"], [0.08121, "2-1"], [0.073394, "0-1"], [0.068897, "1-0"], [0.064347, "2-2"]], "aday": false, "aday_takim": null, "p_sonuc": 0.358904, "p_xg": 0.359166, "bol_gol": false, "p5": 0.197026}, {"baslama": "2026-10-17T14:00:00+00:00", "ev": "Fulham", "dep": "Hull", "uretim": "2026-10-13T12:55:51.181623+00:00", "matris": [[0.0671, 0.0733, 0.0401, 0.0146, 0.004, 0.0009], [0.108, 0.118, 0.0645, 0.0235, 0.0064, 0.0014], [0.0868, 0.0949, 0.0518, 0.0189, 0.0052, 0.0011], [0.0466, 0.0509, 0.0278, 0.0101, 0.0028, 0.0006], [0.0187, 0.0205, 0.0112, 0.0041, 0.0011, 0.0002], [0.006, 0.0066, 0.0036, 0.0013, 0.0004, 0.0001]], "disarida": 0.0071, "ev_gol": [0.2002, 0.322, 0.259, 0.1389, 0.08], "dep_gol": [0.3353, 0.3664, 0.2002, 0.0729, 0.0252], "p1": 0.493403, "px": 0.24825499999999998, "p2": 0.258341, "kg": 0.531656, "ust15": 0.7515839999999999, "ust25": 0.506706, "ust35": 0.28620500000000004, "en_olasi": [[0.117975, "1-1"], [0.107959, "1-0"], [0.094886, "2-1"], [0.086831, "2-0"], [0.073341, "0-1"], [0.067115, "0-0"]], "aday": false, "aday_takim": null, "p_sonuc": 0.253581, "p_xg": 0.258341, "bol_gol": false, "p5": 0.137292}, {"baslama": "2026-10-17T14:00:00+00:00", "ev": "Brentford", "dep": "Liverpool", "uretim": "2026-10-13T12:55:51.191419+00:00", "matris": [[0.0343, 0.0594, 0.0514, 0.0297, 0.0129, 0.0045], [0.0562, 0.0974, 0.0844, 0.0487, 0.0211, 0.0073], [0.0462, 0.08, 0.0693, 0.04, 0.0173, 0.006], [0.0253, 0.0437, 0.0379, 0.0219, 0.0095, 0.0033], [0.0104, 0.018, 0.0155, 0.009, 0.0039, 0.0013], [0.0034, 0.0059, 0.0051, 0.0029, 0.0013, 0.0004]], "disarida": 0.0155, "ev_gol": [0.1937, 0.318, 0.2609, 0.1428, 0.0846], "dep_gol": [0.1769, 0.3064, 0.2654, 0.1532, 0.0981], "p1": 0.367471, "px": 0.22719400000000003, "p2": 0.405335, "kg": 0.6636430000000001, "ust15": 0.8501179999999999, "ust25": 0.6551130000000001, "ust35": 0.4358329999999999, "en_olasi": [[0.097432, "1-1"], [0.084382, "1-2"], [0.079959, "2-1"], [0.06925, "2-2"], [0.059361, "0-1"], [0.05625, "1-0"]], "aday": false, "aday_takim": null, "p_sonuc": 0.368651, "p_xg": 0.367471, "bol_gol": true, "p5": 0.250899}, {"baslama": "2026-10-17T14:00:00+00:00", "ev": "Manchester City", "dep": "Ipswich", "uretim": "2026-10-13T12:55:51.201013+00:00", "matris": [[0.0196, 0.0163, 0.0068, 0.0019, 0.0004, 0.0001], [0.0607, 0.0506, 0.0211, 0.0059, 0.0012, 0.0002], [0.0941, 0.0784, 0.0327, 0.0091, 0.0019, 0.0003], [0.0972, 0.081, 0.0338, 0.0094, 0.002, 0.0003], [0.0753, 0.0628, 0.0262, 0.0073, 0.0015, 0.0003], [0.0467, 0.0389, 0.0162, 0.0045, 0.0009, 0.0002]], "disarida": 0.0942, "ev_gol": [0.0451, 0.1397, 0.2166, 0.2238, 0.3748], "dep_gol": [0.4344, 0.3622, 0.151, 0.042, 0.0104], "p1": 0.8180990000000001, "px": 0.113976, "p2": 0.06792, "kg": 0.540092, "ust15": 0.9033779999999999, "ust25": 0.751877, "ust35": 0.5532380000000001, "en_olasi": [[0.097205, "3-0"], [0.09408, "2-0"], [0.081047, "3-1"], [0.078442, "2-1"], [0.075325, "4-0"], [0.062804, "4-1"]], "aday": false, "aday_takim": null, "p_sonuc": 0.050311, "p_xg": 0.06792, "bol_gol": true, "p5": 0.35790599999999995}, {"baslama": "2026-10-17T16:30:00+00:00", "ev": "Newcastle United", "dep": "Aston Villa", "uretim": "2026-10-13T12:55:51.210140+00:00", "matris": [[0.0371, 0.053, 0.0379, 0.0181, 0.0065, 0.0018], [0.0691, 0.0989, 0.0707, 0.0337, 0.0121, 0.0034], [0.0644, 0.0922, 0.0659, 0.0314, 0.0112, 0.0032], [0.0401, 0.0573, 0.041, 0.0195, 0.007, 0.002], [0.0187, 0.0267, 0.0191, 0.0091, 0.0033, 0.0009], [0.007, 0.01, 0.0071, 0.0034, 0.0012, 0.0003]], "disarida": 0.0157, "ev_gol": [0.1549, 0.2889, 0.2694, 0.1675, 0.1193], "dep_gol": [0.2392, 0.3422, 0.2447, 0.1167, 0.0572], "p1": 0.478438, "px": 0.225007, "p2": 0.29655499999999996, "kg": 0.6429370000000001, "ust15": 0.84083, "ust25": 0.63963, "ust35": 0.418624, "en_olasi": [[0.098852, "1-1"], [0.092172, "2-1"], [0.070702, "1-2"], [0.069105, "1-0"], [0.065925, "2-2"], [0.064435, "2-0"]], "aday": false, "aday_takim": null, "p_sonuc": 0.31121299999999996, "p_xg": 0.29655499999999996, "bol_gol": false, "p5": 0.236552}, {"baslama": "2026-10-18T13:00:00+00:00", "ev": "Brighton", "dep": "Crystal Palace", "uretim": "2026-10-13T12:55:51.219254+00:00", "matris": [[0.0369, 0.049, 0.0325, 0.0144, 0.0048, 0.0013], [0.0727, 0.0966, 0.0641, 0.0284, 0.0094, 0.0025], [0.0717, 0.0952, 0.0633, 0.028, 0.0093, 0.0025], [0.0471, 0.0626, 0.0416, 0.0184, 0.0061, 0.0016], [0.0232, 0.0309, 0.0205, 0.0091, 0.003, 0.0008], [0.0092, 0.0122, 0.0081, 0.0036, 0.0012, 0.0003]], "disarida": 0.018, "ev_gol": [0.1392, 0.2744, 0.2706, 0.1779, 0.1379], "dep_gol": [0.2649, 0.3519, 0.2337, 0.1035, 0.046], "p1": 0.5243430000000001, "px": 0.21845599999999998, "p2": 0.257198, "kg": 0.632795, "ust15": 0.841461, "ust25": 0.640672, "ust35": 0.419769, "en_olasi": [[0.096575, "1-1"], [0.09523, "2-1"], [0.072702, "1-0"], [0.071689, "2-0"], [0.064144, "1-2"], [0.063251, "2-2"]], "aday": false, "aday_takim": null, "p_sonuc": 0.21616200000000002, "p_xg": 0.257198, "bol_gol": false, "p5": 0.237495}, {"baslama": "2026-10-18T13:00:00+00:00", "ev": "Bournemouth", "dep": "Sunderland", "uretim": "2026-10-13T12:55:51.228719+00:00", "matris": [[0.0506, 0.0578, 0.033, 0.0126, 0.0036, 0.0008], [0.0931, 0.1064, 0.0608, 0.0232, 0.0066, 0.0015], [0.0858, 0.098, 0.056, 0.0213, 0.0061, 0.0014], [0.0527, 0.0602, 0.0344, 0.0131, 0.0037, 0.0009], [0.0242, 0.0277, 0.0158, 0.006, 0.0017, 0.0004], [0.0089, 0.0102, 0.0058, 0.0022, 0.0006, 0.0001]], "disarida": 0.0127, "ev_gol": [0.1585, 0.292, 0.2689, 0.1651, 0.1155], "dep_gol": [0.319, 0.3645, 0.2082, 0.0793, 0.029], "p1": 0.5372509999999999, "px": 0.22794899999999998, "p2": 0.234801, "kg": 0.5730270000000001, "ust15": 0.798495, "ust25": 0.5732839999999999, "ust35": 0.349251, "en_olasi": [[0.106423, "1-1"], [0.098004, "2-1"], [0.093148, "1-0"], [0.085779, "2-0"], [0.060796, "1-2"], [0.060168, "3-1"]], "aday": false, "aday_takim": null, "p_sonuc": 0.26059000000000004, "p_xg": 0.234801, "bol_gol": false, "p5": 0.18210400000000002}, {"baslama": "2026-10-18T13:00:00+00:00", "ev": "Leeds", "dep": "Manchester United", "uretim": "2026-10-13T12:55:51.237910+00:00", "matris": [[0.0447, 0.0666, 0.0496, 0.0246, 0.0092, 0.0027], [0.0723, 0.1078, 0.0803, 0.0399, 0.0148, 0.0044], [0.0585, 0.0872, 0.0649, 0.0322, 0.012, 0.0036], [0.0316, 0.047, 0.035, 0.0174, 0.0065, 0.0019], [0.0128, 0.019, 0.0142, 0.007, 0.0026, 0.0008], [0.0041, 0.0062, 0.0046, 0.0023, 0.0008, 0.0003]], "disarida": 0.0106, "ev_gol": [0.1983, 0.3208, 0.2596, 0.14, 0.0813], "dep_gol": [0.2254, 0.3358, 0.2502, 0.1242, 0.0644], "p1": 0.408918, "px": 0.23766400000000001, "p2": 0.35342000000000007, "kg": 0.620971, "ust15": 0.816372, "ust25": 0.6005020000000001, "ust35": 0.376883, "en_olasi": [[0.107751, "1-1"], [0.08717, "2-1"], [0.080259, "1-2"], [0.07233, "1-0"], [0.066596, "0-1"], [0.064929, "2-2"]], "aday": false, "aday_takim": null, "p_sonuc": 0.347698, "p_xg": 0.35342000000000007, "bol_gol": false, "p5": 0.203148}, {"baslama": "2026-10-18T15:30:00+00:00", "ev": "Nottingham Forest", "dep": "Arsenal", "uretim": "2026-10-13T12:55:51.247085+00:00", "matris": [[0.0647, 0.1139, 0.1002, 0.0587, 0.0258, 0.0091], [0.0633, 0.1114, 0.098, 0.0575, 0.0253, 0.0089], [0.031, 0.0545, 0.0479, 0.0281, 0.0124, 0.0044], [0.0101, 0.0178, 0.0156, 0.0092, 0.004, 0.0014], [0.0025, 0.0043, 0.0038, 0.0022, 0.001, 0.0003], [0.0005, 0.0008, 0.0007, 0.0004, 0.0002, 0.0001]], "disarida": 0.0099, "ev_gol": [0.376, 0.3678, 0.1799, 0.0587, 0.0177], "dep_gol": [0.1722, 0.3029, 0.2664, 0.1562, 0.1023], "p1": 0.208388, "px": 0.234286, "p2": 0.557326, "kg": 0.516578, "ust15": 0.7580600000000001, "ust25": 0.515511, "ust35": 0.29418600000000006, "en_olasi": [[0.113884, "0-1"], [0.111402, "1-1"], [0.100176, "0-2"], [0.097993, "1-2"], [0.064733, "0-0"], [0.063323, "1-0"]], "aday": false, "aday_takim": null, "p_sonuc": 0.206299, "p_xg": 0.208388, "bol_gol": false, "p5": 0.142716}, {"baslama": "2026-10-19T19:00:00+00:00", "ev": "Tottenham", "dep": "Coventry", "uretim": "2026-10-13T12:55:51.260779+00:00", "matris": [[0.0571, 0.0631, 0.0349, 0.0128, 0.0036, 0.0008], [0.1004, 0.1109, 0.0613, 0.0226, 0.0062, 0.0014], [0.0882, 0.0975, 0.0539, 0.0198, 0.0055, 0.0012], [0.0517, 0.0571, 0.0316, 0.0116, 0.0032, 0.0007], [0.0227, 0.0251, 0.0139, 0.0051, 0.0014, 0.0003], [0.008, 0.0088, 0.0049, 0.0018, 0.0005, 0.0001]], "disarida": 0.0103, "ev_gol": [0.1724, 0.3031, 0.2664, 0.1561, 0.102], "dep_gol": [0.3311, 0.366, 0.2023, 0.0745, 0.0261], "p1": 0.526541, "px": 0.235044, "p2": 0.23841400000000001, "kg": 0.553553, "ust15": 0.779456, "ust25": 0.5454600000000001, "ust35": 0.322138, "en_olasi": [[0.110919, "1-1"], [0.100356, "1-0"], [0.097492, "2-1"], [0.088207, "2-0"], [0.063098, "0-1"], [0.061297, "1-2"]], "aday": false, "aday_takim": null, "p_sonuc": 0.22294299999999997, "p_xg": 0.23841400000000001, "bol_gol": false, "p5": 0.16228599999999999}, {"baslama": "2026-10-23T19:00:00+00:00", "ev": "Ipswich", "dep": "Nottingham Forest", "uretim": "2026-10-17T09:39:16.913402+00:00", "matris": [[0.0504, 0.0877, 0.0763, 0.0443, 0.0193, 0.0067], [0.0628, 0.1094, 0.0952, 0.0553, 0.0241, 0.0084], [0.0392, 0.0682, 0.0594, 0.0345, 0.015, 0.0052], [0.0163, 0.0284, 0.0247, 0.0143, 0.0062, 0.0022], [0.0051, 0.0088, 0.0077, 0.0045, 0.0019, 0.0007], [0.0013, 0.0022, 0.0019, 0.0011, 0.0005, 0.0002]], "disarida": 0.0107, "ev_gol": [0.2872, 0.3583, 0.2235, 0.0929, 0.038], "dep_gol": [0.1753, 0.3053, 0.2657, 0.1542, 0.0994], "p1": 0.274529, "px": 0.235593, "p2": 0.4898760000000001, "kg": 0.5878190000000001, "ust15": 0.7991419999999999, "ust25": 0.574251, "ust35": 0.35021500000000005, "en_olasi": [[0.10938, "1-1"], [0.095217, "1-2"], [0.087674, "0-1"], [0.076321, "0-2"], [0.06823, "2-1"], [0.062825, "1-0"]], "aday": false, "aday_takim": null, "p_sonuc": 0.246595, "p_xg": 0.274529, "bol_gol": false, "p5": 0.18282400000000001}], "oynanan": [{"understat_id": 31239, "tarih": "2026-10-12", "baslama": "2026-10-12T19:00:00+00:00", "ev": "Coventry", "dep": "Newcastle United", "ev_gol": 4, "dep_gol": 1, "olasilik": 0.006592, "sira": 22, "en_olasi": "1-1", "skor_ll": 5.0218984864, "b0_skor_ll": 4.0220993539, "zayif_kazandi": true, "gol5": true, "surpriz": true, "radardaydi": false, "2.5 üst": 0.545913, "KG var": 0.556627}, {"understat_id": 31238, "tarih": "2026-10-11", "baslama": "2026-10-11T15:30:00+00:00", "ev": "Liverpool", "dep": "Manchester City", "ev_gol": 0, "dep_gol": 3, "olasilik": 0.026055, "sira": 15, "en_olasi": "1-1", "skor_ll": 3.6475455906, "b0_skor_ll": 3.8972787446, "zayif_kazandi": false, "gol5": false, "surpriz": true, "radardaydi": false, "2.5 üst": 0.653687, "KG var": 0.662767}, {"understat_id": 31236, "tarih": "2026-10-11", "baslama": "2026-10-11T13:00:00+00:00", "ev": "Crystal Palace", "dep": "Nottingham Forest", "ev_gol": 3, "dep_gol": 1, "olasilik": 0.049918, "sira": 9, "en_olasi": "1-1", "skor_ll": 2.9973736198, "b0_skor_ll": 3.0668692796, "zayif_kazandi": false, "gol5": false, "surpriz": false, "radardaydi": false, "2.5 üst": 0.551912, "KG var": 0.577167}, {"understat_id": 31237, "tarih": "2026-10-11", "baslama": "2026-10-11T13:00:00+00:00", "ev": "Hull", "dep": "Everton", "ev_gol": 2, "dep_gol": 2, "olasilik": 0.04451, "sira": 9, "en_olasi": "1-1", "skor_ll": 3.112041396, "b0_skor_ll": 2.8612857566, "zayif_kazandi": false, "gol5": false, "surpriz": false, "radardaydi": false, "2.5 üst": 0.409598, "KG var": 0.4715}, {"understat_id": 31235, "tarih": "2026-10-10", "baslama": "2026-10-10T16:30:00+00:00", "ev": "Manchester United", "dep": "Tottenham", "ev_gol": 1, "dep_gol": 1, "olasilik": 0.096922, "sira": 2, "en_olasi": "2-1", "skor_ll": 2.3338487477, "b0_skor_ll": 2.1334692477, "zayif_kazandi": false, "gol5": false, "surpriz": false, "radardaydi": false, "2.5 üst": 0.628822, "KG var": 0.614134}, {"understat_id": 31231, "tarih": "2026-10-10", "baslama": "2026-10-10T14:00:00+00:00", "ev": "Aston Villa", "dep": "Brentford", "ev_gol": 2, "dep_gol": 2, "olasilik": 0.067074, "sira": 4, "en_olasi": "1-1", "skor_ll": 2.7019587915, "b0_skor_ll": 2.8643447371, "zayif_kazandi": false, "gol5": false, "surpriz": false, "radardaydi": false, "2.5 üst": 0.6271, "KG var": 0.641364}, {"understat_id": 31232, "tarih": "2026-10-10", "baslama": "2026-10-10T14:00:00+00:00", "ev": "Chelsea", "dep": "Bournemouth", "ev_gol": 5, "dep_gol": 1, "olasilik": 0.010343, "sira": 23, "en_olasi": "1-1", "skor_ll": 4.5714453166, "b0_skor_ll": 5.2184378797, "zayif_kazandi": false, "gol5": true, "surpriz": true, "radardaydi": true, "2.5 üst": 0.67265, "KG var": 0.67189}, {"understat_id": 31233, "tarih": "2026-10-10", "baslama": "2026-10-10T14:00:00+00:00", "ev": "Ipswich", "dep": "Fulham", "ev_gol": 2, "dep_gol": 1, "olasilik": 0.069609, "sira": 5, "en_olasi": "1-1", "skor_ll": 2.6648614097, "b0_skor_ll": 2.4009856506, "zayif_kazandi": true, "gol5": false, "surpriz": true, "radardaydi": false, "2.5 üst": 0.57494, "KG var": 0.590462}, {"understat_id": 31234, "tarih": "2026-10-10", "baslama": "2026-10-10T14:00:00+00:00", "ev": "Sunderland", "dep": "Brighton", "ev_gol": 0, "dep_gol": 2, "olasilik": 0.063314, "sira": 6, "en_olasi": "1-1", "skor_ll": 2.7596488052, "b0_skor_ll": 3.0224591119, "zayif_kazandi": false, "gol5": false, "surpriz": false, "radardaydi": false, "2.5 üst": 0.565003, "KG var": 0.592925}, {"understat_id": 31230, "tarih": "2026-10-10", "baslama": "2026-10-10T11:30:00+00:00", "ev": "Arsenal", "dep": "Leeds", "ev_gol": 2, "dep_gol": 1, "olasilik": 0.098976, "sira": 3, "en_olasi": "2-0", "skor_ll": 2.3128778825, "b0_skor_ll": 2.4009856506, "zayif_kazandi": false, "gol5": false, "surpriz": false, "radardaydi": false, "2.5 üst": 0.559398, "KG var": 0.51378}]}</script>
+<script>
+const V = JSON.parse(document.getElementById("veri").textContent);
+const yuzde = (p, k = 0) => "%" + (p * 100).toFixed(k);
+const saat = iso => new Date(iso).toLocaleString("tr-TR", {timeZone: "Europe/Istanbul",
+  weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"});
+const el = (etiket, sinif, metin) => { const e = document.createElement(etiket);
+  if (sinif) e.className = sinif; if (metin != null) e.textContent = metin; return e; };
+
+document.getElementById("guncelleme").textContent =
+  `Son güncelleme: ${saat(V.guncelleme)} · Model: ${V.model}`;
+document.getElementById("e-skor").textContent = yuzde(V.esik.skor);
+
+function radarCipleri(m) {
+  const c = el("div", "cipler");
+  if (m.aday) c.append(el("span", "cip uyari",
+    `Sürpriz adayı: ${m.aday_takim} — puan tablosu bakışı ${yuzde(m.p_sonuc)}, xG bakışı ${yuzde(m.p_xg)}`));
+  if (m.bol_gol) c.append(el("span", "cip uyari",
+    `Bol gol riski — benzer maçların ${yuzde(V.esik.gol_gercek)}'ünde 5+ gol oldu`));
+  return c;
+}
+
+// Radar
+const radar = document.getElementById("radar");
+const radardakiler = V.yaklasan.filter(m => m.aday || m.bol_gol)
+  .sort((a, b) => (b.aday - a.aday) || (b.p5 - a.p5));
+if (!V.yaklasan.length) radar.append(el("p", "bos", "Önümüzdeki günlerde tahmin edilmiş maç yok."));
+else if (!radardakiler.length) radar.append(el("p", "bos", "Bu hafta radarda maç yok."));
+for (const m of radardakiler) {
+  const k = el("div", "kart");
+  const ust = el("div", "mac-ust");
+  ust.append(el("span", "takimlar", `${m.ev} – ${m.dep}`), el("span", "saat", saat(m.baslama)));
+  k.append(ust, radarCipleri(m));
+  radar.append(k);
+}
+
+// Maç kartları
+const maclar = document.getElementById("maclar");
+if (!V.yaklasan.length) maclar.append(el("p", "bos", "Önümüzdeki günlerde tahmin edilmiş maç yok."));
+for (const m of V.yaklasan) {
+  const k = el("div", "kart");
+  const ust = el("div", "mac-ust");
+  ust.append(el("span", "takimlar", `${m.ev} – ${m.dep}`), el("span", "saat", saat(m.baslama)));
+  k.append(ust);
+  if (m.aday || m.bol_gol) k.append(radarCipleri(m));
+
+  const uc = el("div", "uclu");
+  for (const [ad, p] of [[`${m.ev} kazanır`, m.p1], ["Beraberlik", m.px], [`${m.dep} kazanır`, m.p2]]) {
+    const d = el("div"); d.append(el("b", null, yuzde(p)), el("span", null, ad)); uc.append(d);
+  }
+  k.append(uc);
+
+  const cip = el("div", "cipler");
+  m.en_olasi.forEach(([p, s]) => cip.append(el("span", "cip", `${s}  ${yuzde(p, 1)}`)));
+  k.append(el("p", "etiket", "En olası skorlar"), cip);
+
+  const iki = el("div", "iki-kolon");
+  for (const [ad, dag] of [[m.ev, m.ev_gol], [m.dep, m.dep_gol]]) {
+    const kol = el("div"); kol.append(el("p", "etiket", `${ad} kaç gol atar`));
+    const mx = Math.max(...dag);
+    dag.forEach((p, g) => {
+      const c = el("div", "cubuk"); const b = el("i"); b.style.width = (p / mx * 100) + "%";
+      const kutu = el("span"); kutu.append(b);
+      c.append(el("span", null, g === 4 ? "4+" : String(g)), kutu, el("span", null, yuzde(p, 1)));
+      kol.append(c);
+    });
+    iki.append(kol);
+  }
+  k.append(iki);
+
+  const det = el("details"); det.append(el("summary", null, "Tüm skor tablosu"));
+  const iz = el("div", "izgara");
+  iz.append(el("div", "bas", ""));
+  for (let j = 0; j < 6; j++) iz.append(el("div", "bas", `${m.dep.slice(0, 3)} ${j}`));
+  const mx = Math.max(...m.matris.flat());
+  m.matris.forEach((satir, i) => {
+    iz.append(el("div", "satir-bas", `${m.ev.slice(0, 10)} ${i}`));
+    satir.forEach(p => { const h = el("div", null, (p * 100).toFixed(1));
+      h.style.background = `rgba(var(--isi),${(0.08 + 0.72 * p / mx).toFixed(2)})`;
+      if (p / mx > 0.6) h.style.color = "var(--kart)";
+      iz.append(h); });
+  });
+  det.append(iz, el("p", "ozet-satir", `Tablo dışındaki skorlar (6+ gol bir takımda): ${yuzde(m.disarida, 1)}`));
+  k.append(det);
+
+  k.append(el("p", "ozet-satir",
+    `KG var ${yuzde(m.kg)} · 1.5 üst ${yuzde(m.ust15)} · 2.5 üst ${yuzde(m.ust25)} · 3.5 üst ${yuzde(m.ust35)}`));
+  maclar.append(k);
+}
+
+// Sonuçlar
+const sonuclar = document.getElementById("sonuclar");
+if (!V.oynanan.length) sonuclar.append(el("p", "bos", "Henüz defterdeki maçlardan oynanan yok. İlk sonuçlar maçlardan sonraki sabah burada görünür."));
+else {
+  const n = V.oynanan.length, ort = a => a.reduce((x, y) => x + y, 0) / a.length;
+  const s = V.oynanan.filter(m => m.surpriz);
+  const oz = document.getElementById("ozet"); oz.hidden = false;
+  oz.append(el("div", null, `${n} maç · gerçek skora verilen ortalama ihtimal ${yuzde(ort(V.oynanan.map(m => m.olasilik)), 1)} · gerçek skor ilk 3 tahminde: ${V.oynanan.filter(m => m.sira <= 3).length}/${n}`));
+  oz.append(el("div", null, `Sürpriz: ${s.length} maç, bunların ${s.filter(m => m.radardaydi).length} tanesi radardaydı`));
+  const lig = ort(V.oynanan.map(m => m.b0_skor_ll)), mod = ort(V.oynanan.map(m => m.skor_ll));
+  oz.append(el("div", "ozet-satir", `Lig ortalamasına göre: model ${mod < lig ? "daha iyi" : "daha kötü"} (skor kaybı ${mod.toFixed(3)}, lig ortalaması ${lig.toFixed(3)}).` + (n < 100 ? " 100 maçın altında bu karşılaştırma gürültüdür." : "")));
+  for (const m of V.oynanan) {
+    const k = el("div", "kart sonuc");
+    const sol = el("div");
+    sol.append(el("div", "takimlar", `${m.ev} – ${m.dep}`), el("div", "saat", saat(m.baslama)));
+    k.append(sol, el("div", "skor", `${m.ev_gol}-${m.dep_gol}`));
+    const cip = el("div", "cipler"); cip.style.gridColumn = "1 / -1";
+    cip.append(el("span", "cip", `Bu skora ihtimal: ${yuzde(m.olasilik, 1)} (${m.sira}. sırada)`));
+    cip.append(el("span", "cip", `Modelin favori skoru: ${m.en_olasi}`));
+    if (m.surpriz) cip.append(el("span", "cip uyari", "Sürpriz"));
+    if (m.surpriz && m.radardaydi) cip.append(el("span", "cip iyi", "Radardaydı"));
+    k.append(cip);
+    sonuclar.append(k);
+  }
+}
+</script>
+</body>
+</html>
